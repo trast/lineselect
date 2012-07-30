@@ -67,8 +67,10 @@ sub print_color_line {
 			set_color;
 		}
 	}
-	printw($line);
-	$remain -= length $line;
+	if (defined $line) {
+		printw($line);
+		$remain -= length $line;
+	}
 	if ($remain > 0) {
 		printw(" "x$remain);
 	}
