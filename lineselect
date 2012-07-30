@@ -214,6 +214,10 @@ sub mainloop {
 			}
 			$sel = $eof-1;
 			adjust_view;
+		} else {
+			$cmdline = sprintf "unknown key[%d]: %d %#o %#x", length($c), ord($c), ord($c), ord($c);
+			redraw;
+			sleep 1;
 		}
 	}
 }
