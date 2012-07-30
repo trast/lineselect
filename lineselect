@@ -48,7 +48,7 @@ sub print_color_line {
 	$fg = 7;
 	$bg = 0;
 	set_color;
-	while ($line =~ m{^([^\e]*)\e\[([^m]*)m(.*)}) {
+	while (defined $line and $line =~ m{^([^\e]*)\e\[([^m]*)m(.*)}) {
 		printw($1);
 		$remain -= length $1;
 		$line = $3;
