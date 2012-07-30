@@ -1,0 +1,34 @@
+lineselect
+----------
+
+This is a silly little hack that reads a set of lines from stdin, lets
+you choose one, and prints it back out on stdout.  I got the idea from
+Thomas Badie in this thread:
+
+  http://thread.gmane.org/gmane.comp.version-control.git/202535
+
+You can optionally specify a regex argument.  If you do, only lines
+that match the regex are eligible for selection, and only the first
+group of the match is printed to stdout.
+
+Used with clever bash key bindings to quickly insert something from
+a long list of choices.
+
+Example with git:
+
+  insert () {
+      READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$1${READLINE_LINE:$READLINE_POINT}"
+      READLINE_POINT=$(($READLINE_POINT + ${#1}))
+  }
+  
+  insert_sha1_from_log () {
+      str=$(git log --oneline --decorate --graph --date-order | ../lineselect '[|* ]* ([0-9a-f]+)')
+      if [ $? -eq 0 ]; then
+  	insert "$str"
+      fi
+  }
+  
+  bind -x '"\C-x^": insert_sha1_from_log'
+
+Now you can hit C-x ^ to quickly choose and insert a SHA1 from the
+git log of the current repository.
