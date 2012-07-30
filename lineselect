@@ -202,7 +202,7 @@ sub mainloop {
 			forward 1;
 		} elsif ($c eq "p" or $c eq "k" or $c eq KEY_UP) {
 			backward 1;
-		} elsif ($c eq "/" or $c eq "f") {
+		} elsif ($c eq "/" or $c eq "f" or $c eq "\x13") {
 			search;
 		} elsif ($c eq "<" or $c eq KEY_HOME) {
 			$sel = 0;
