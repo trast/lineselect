@@ -22,6 +22,10 @@ sub read_more {
 		my $read = <$input>;
 		if (!defined $read) {
 			$eof = scalar @lines;
+			if ($eof == 0) {
+				endwin;
+				die "No input!";
+			}
 			return;
 		}
 		push @lines, $read;
