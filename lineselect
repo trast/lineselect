@@ -183,7 +183,6 @@ sub getkey {
 sub search {
 	my $start = $sel;
 	while (1) {
-		$sel = $start;
 		my $case_sens = ($search_str ne lc $search_str);
 		while (1) {
 			if ($eof > 0 and $sel >= $eof) {
@@ -210,6 +209,7 @@ sub search {
 		redraw;
 		my $c = getkey();
 		if ($c eq "\b" or $c eq "\x7f") {
+			$sel = $start;
 			$search_str = substr $search_str, 0, length($search_str)-1;
 		} elsif ($c eq "\n") {
 			$sel = $start if $sel < 0;
@@ -217,7 +217,10 @@ sub search {
 		} elsif ($c eq "\033") {
 			$sel = $start;
 			return;
+		} elsif ($c eq "\x13") {
+			$sel++;
 		} else {
+			$sel = $start;
 			$search_str .= $c;
 		}
 	}
@@ -248,6 +251,8 @@ sub mainloop {
 			backward 1;
 		} elsif ($c eq "/" or $c eq "f" or $c eq "\x13") {
 			search;
+		} elsif ($c eq "\033u") {
+			$search_str = "";
 		} elsif ($c eq "<" or $c eq KEY_HOME) {
 			$sel = 0;
 			adjust_view;
