@@ -85,12 +85,14 @@ sub redraw {
 	clear;
 	attron(COLOR_PAIR(8));
 	for my $i (0..$rows-2) {
+		move($i, 0);
 		if ($top+$i == $sel) {
 			attron(A_STANDOUT);
+			printw(">");
 		} else {
 			attroff(A_STANDOUT);
+			printw(" ");
 		}
-		move($i, 0);
 		print_color_line($lines[$top+$i]);
 	}
 	move($rows-1, 0);
