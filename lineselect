@@ -173,6 +173,13 @@ sub forward {
 	adjust_view;
 }
 
+sub getkey {
+	my $seq = getch();
+	return $seq if $seq ne "\033";
+	$seq .= getch();
+	return $seq;
+}
+
 sub search {
 	my $start = $sel;
 	while (1) {
@@ -201,7 +208,7 @@ sub search {
 		$cmdline = "/" . $search_str;
 		$cmdline = "NO MATCH -- " . $cmdline if $sel < 0;
 		redraw;
-		my $c = getch();
+		my $c = getkey();
 		if ($c eq "\b" or $c eq "\x7f") {
 			$search_str = substr $search_str, 0, length($search_str)-1;
 		} elsif ($c eq "\n") {
@@ -221,7 +228,7 @@ sub mainloop {
 		getmaxyx($rows, $cols);
 		$cmdline = ":";
 		redraw;
-		my $c = getch();
+		my $c = getkey();
 		if ($c eq " ") {
 			$sel += $rows-1;
 			read_more $sel;
@@ -231,7 +238,7 @@ sub mainloop {
 			$sel -= $rows-1;
 			$sel = 0 if $sel < 0;
 			adjust_view;
-		} elsif ($c eq "q") {
+		} elsif ($c eq "q" or $c eq "\033\033") {
 			return;
 		} elsif ($c eq KEY_ENTER or $c eq "\n") {
 			return $lines[$sel];
