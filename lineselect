@@ -39,11 +39,19 @@ my $sel = 0;
 my $top = 0;
 
 my $cmdline = ":";
+my $search_str = "";
 
 my $fg = 7;
 my $bg = 0;
+
 sub set_color {
 	attron(COLOR_PAIR(1+$fg+8*$bg));
+}
+
+sub strip_ansi_colors {
+	my $line = $_[0];
+	$line =~ s{\e\[[^m]*m}{}g;
+	return $line;
 }
 
 sub print_color_line {
@@ -80,6 +88,17 @@ sub print_color_line {
 	}
 }
 
+sub search_in_line {
+	my $line = strip_ansi_colors($lines[$_[0]]);
+	if (!length($search_str) or $line !~ m{$search_str}) {
+		return undef;
+	}
+	if (wantarray) {
+		return $-[0], $+[0];
+	}
+	return 1;
+}
+
 sub redraw {
 	read_more $top+$rows-1;
 	clear;
@@ -94,6 +113,13 @@ sub redraw {
 			printw(" ");
 		}
 		print_color_line($lines[$top+$i]);
+		if (length($search_str) > 0) {
+			my ($a,$b) = search_in_line($top+$i);
+			if (defined $a) {
+				move($i, $a+1);
+				chgat($b-$a, A_BOLD, 15, 0);
+			}
+		}
 	}
 	move($rows-1, 0);
 	attron(COLOR_PAIR(8));
@@ -149,7 +175,6 @@ sub forward {
 
 sub search {
 	my $start = $sel;
-	my $search_str = "";
 	while (1) {
 		$sel = $start;
 		my $case_sens = ($search_str ne lc $search_str);
