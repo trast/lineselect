@@ -106,10 +106,10 @@ sub redraw {
 	for my $i (0..$rows-2) {
 		move($i, 0);
 		if ($top+$i == $sel) {
-			attron(A_STANDOUT);
+			attron(A_REVERSE);
 			printw(">");
 		} else {
-			attroff(A_STANDOUT);
+			attroff(A_REVERSE);
 			printw(" ");
 		}
 		print_color_line($lines[$top+$i]);
