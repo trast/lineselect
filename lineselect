@@ -202,6 +202,10 @@ sub mainloop {
 			read_more $sel;
 			$sel = $eof-1 if $eof > 0 and $sel > $eof;
 			adjust_view;
+		} elsif ($c eq "b" or $c eq "\x7f" or $c eq "\b") {
+			$sel -= $rows-1;
+			$sel = 0 if $sel < 0;
+			adjust_view;
 		} elsif ($c eq "q") {
 			return;
 		} elsif ($c eq KEY_ENTER or $c eq "\n") {
